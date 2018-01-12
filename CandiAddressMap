@@ -1,0 +1,46 @@
+<apex:page standardController="Candidates__c">
+
+<script src="http://maps.google.com/maps?file=api">
+</script>
+
+<script type="text/javascript">
+
+var map = null;
+var geocoder = null;
+var address = "{!Candidates__c.Country__c} {!Candidates__c.State_Province__c} {!Candidates__c.City__c}, {!Candidates__c.Street__c}";
+  
+function FetchMap() {
+if(GBrowserIsCompatible())
+{
+  map = new GMap2(document.getElementById("MyMap"));
+  map.addControl(new GMapTypeControl());
+  map.addControl(new GLargeMapControl3D());
+  
+  geocoder = new GClientGeocoder();
+  geocoder.getLatLng(
+    address,
+    function(point) {
+      if (!point) {
+        var p=document.getElementById("MyMap").innerHTML = address + " not found";
+          p.innerHTML="Address Not found";
+      } else {
+        map.setCenter(point, 13);
+        var marker = new GMarker(point);
+        map.addOverlay(marker);
+        marker.bindInfoWindowHtml("Candidates__c Name : <b><i> {!Candidates__c.Last_Name__c} </i></b> <br/> Address : "+address);
+          console.log(address);
+      }
+    }
+  );
+}
+}
+</script>
+
+
+<div id="MyMap" style="width:80%;height:250px ">
+    </div>
+<script>
+    FetchMap();
+</script>
+
+</apex:page>
